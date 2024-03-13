@@ -1,6 +1,6 @@
 angular.module('app', ['ngStorage']).controller('indexController', function ($scope, $http, $localStorage) {
     $scope.tryToAuth = function (){
-        $http.post('http://localhost:5555/core/auth', $scope.user)
+        $http.post('http://localhost:5555/auth/auth', $scope.user)
             .then(function successCallback(response) {
                     if (response.data.token) {
                         $http.defaults.headers.common.Authorization = 'Bearer' + response.data.token;
@@ -28,11 +28,11 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
             return false;
         }
     };
-     $scope.authCheck = function (){
-         $http.get('http://localhost:5555/core/auth_check').then(function (response){
-             alert(response.data.value);
-         });
-     };
+     // $scope.authCheck = function (){
+     //     $http.get('http://localhost:5555/core/auth_check').then(function (response){
+     //         alert(response.data.value);
+     //     });
+     // };
 
      if ($localStorage.winterMarketUser){
          try{
@@ -60,6 +60,7 @@ angular.module('app', ['ngStorage']).controller('indexController', function ($sc
     $scope.createOrder = function () {
         $http.post('http://localhost:5555/core/api/v1/orders').then(function (response) {
             $scope.alert('Заказ оформлен');
+            $scope.loadCart();
         });
     }
 

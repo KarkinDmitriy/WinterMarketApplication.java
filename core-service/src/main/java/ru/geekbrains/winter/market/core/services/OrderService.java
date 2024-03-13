@@ -1,13 +1,12 @@
 package ru.geekbrains.winter.market.core.services;
 
-import com.fasterxml.jackson.databind.ObjectReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.geekbrains.winter.market.api.CartDto;
 import ru.geekbrains.winter.market.core.entities.Order;
 import ru.geekbrains.winter.market.core.entities.OrderItem;
-import ru.geekbrains.winter.market.core.entities.User;
+import ru.geekbrains.winter.market.core.integrations.CartServiceIntegration;
 import ru.geekbrains.winter.market.core.repositories.OrderRepository;
 
 import java.util.stream.Collectors;
@@ -17,14 +16,15 @@ import java.util.stream.Collectors;
 public class OrderService {
     private final ProductService productService;
     private  final OrderRepository orderRepository;
+    private final CartServiceIntegration cartServiceIntegration;
 
     @Transactional
-    public void createOrder(User user){
+    public void createOrder(String username){
 
-        CartDto cartDto = null;//cartServiceIntegration.getCurrentCart();тут вы получите ее из карт МС
+        CartDto cartDto = cartServiceIntegration.getCurrentCart();//тут вы получите ее из карт МС
 
         Order order= new Order();
-        order.setUser(user);
+        order.setUsername(username);
         order.setTotalPrice(cartDto.getTotalPrice());
         order.setItems(cartDto.getItems().stream().map(
                 cartItem -> new OrderItem(
@@ -36,7 +36,7 @@ public class OrderService {
                 )
         ).collect(Collectors.toList()));
         orderRepository.save(order);
-        //cartServiceIntegration.clear();
+        cartServiceIntegration.clear();
 
     }
 
