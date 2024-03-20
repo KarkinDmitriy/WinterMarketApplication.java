@@ -10,7 +10,7 @@ import ru.geekbrains.winter.market.core.services.OrderService;
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor
-@CrossOrigin("*")
+
 public class OrderController {
     private  final OrderService orderService;
 

@@ -24,6 +24,7 @@ public class CartService {
 
     public  void add(Long productId){
         ProductDto product = productServiceIntegration.getProductById(productId);
+       tempCart.add(product);
     }
     public void remove(Long productId){
         tempCart.remove(productId);
